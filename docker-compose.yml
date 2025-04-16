@@ -1,0 +1,26 @@
+version: '3.8'
+
+services:
+  backend:
+    build: .
+    ports:
+      - "3000:3000"
+    depends_on:
+      - mongo
+    container_name: booknest-backend-container-host
+    environment:
+      - MONGODB_URI=mongodb://mongoContainer:27017/booknest
+    networks:
+      - booknest-network 
+  mongo:
+    image: mongo
+    container_name: mongoContainer
+    networks:
+      - booknest-network  # mongo container only part of the bridge network
+
+networks:
+  booknest-network:
+    driver: bridge  # bridge network for mongo container
+  
+
+ 
