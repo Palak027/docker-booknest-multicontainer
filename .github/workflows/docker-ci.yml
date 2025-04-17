@@ -21,7 +21,7 @@ jobs:
 
       - name: Run test in Docker Container
         run: |
-          docker run --rm ${{ secrets.DOCKER_USERNAME }}/docker-booknest-multicontainer:latest tnpm test
+          docker run --rm ${{ secrets.DOCKER_USERNAME }}/docker-booknest-multicontainer:latest npm test
 
 
       - name: Docker login
