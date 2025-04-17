@@ -1,5 +1,5 @@
 FROM node
-RUN adduser --disabled-password --geoc '' appuser
+RUN adduser --disabled-password --gecos '' appuser
 WORKDIR /app
 COPY package*.json ./
 RUN npm install
