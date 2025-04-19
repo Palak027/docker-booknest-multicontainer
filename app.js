@@ -3,6 +3,7 @@ const mongoose = require("mongoose");
 const cors = require("cors");
 const dotenv = require("dotenv");
 const redis = require("redis");
+const client = require("prom-client"); // ✅ Add this line
 
 dotenv.config();
 
@@ -10,19 +11,26 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// Redis client setup
-//const redisClient = redis.createClient({
-//   socket: {
-//     host: "redisContainer", // Use Redis container name
-//     port: 6379, // Redis default port
-//   },
-// });
+// 🧠 Prometheus: Collect default metrics
+const collectDefaultMetrics = client.collectDefaultMetrics;
+collectDefaultMetrics();
 
-// redisClient.connect()
-//   .then(() => console.log("Connected to Redis"))
-//   .catch((err) => console.error("Redis connection error:", err));
+// 🔥 Optional: Custom metric example
+const httpRequestCounter = new client.Counter({
+  name: 'http_requests_total',
+  help: 'Total number of HTTP requests',
+  labelNames: ['method', 'route', 'status'],
+});
 
-// MongoDB connection setup
+// Use middleware to count requests
+app.use((req, res, next) => {
+  res.on('finish', () => {
+    httpRequestCounter.labels(req.method, req.path, res.statusCode).inc();
+  });
+  next();
+});
+
+// MongoDB connection
 mongoose.connect(process.env.MONGODB_URI, {
   useNewUrlParser: true,
   useUnifiedTopology: true,

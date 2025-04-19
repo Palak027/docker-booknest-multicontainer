@@ -16,11 +16,12 @@ services:
     image: mongo
     container_name: mongoContainer
     networks:
-      - booknest-network  # mongo container only part of the bridge network
+      - booknest-network  
 
 networks:
   booknest-network:
-    driver: bridge  # bridge network for mongo container
+    driver: bridge  
+ 
   
 
  
